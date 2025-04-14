@@ -1,0 +1,6 @@
+dotenv
+llama_parse
+PyMuPDF
+pymongo
+fastapi
+uvicorn
