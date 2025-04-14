@@ -1,24 +1,35 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from src.llama_parser.llama_resume_parser import ResumeParser
-from src.standardizer.standardizer import ResumeStandardizer
+from celery.result import AsyncResult
 
+from src.celery_app import celery_app
+from src.tasks import parser_tasks, standardizer_tasks
+from src.utils.progress import get_progress
 app = FastAPI()
 
-
 @app.post("/parse")
-def parse_resumes():
-    try:
-        ResumeParser().run()  # ✅ Just call the class directly
-        return JSONResponse(content={"message": "✅ Resume parsing complete"}, status_code=200)
-    except Exception as e:
-        return JSONResponse(content={"message": f"❌ Parsing failed: {str(e)}"}, status_code=500)
-
+def trigger_parse():
+    task = parser_tasks.parse_resumes_task.delay()
+    return {"task_id": task.id}
 
 @app.post("/standardize")
-async def standardize_resumes():
-    try:
-        await ResumeStandardizer().run()  # ✅ Await because it's an async method
-        return JSONResponse(content={"message": "✅ Resume standardization complete"}, status_code=200)
-    except Exception as e:
-        return JSONResponse(content={"message": f"❌ Standardization failed: {str(e)}"}, status_code=500)
+def trigger_standardize():
+    task = standardizer_tasks.standardize_resumes_task.delay()
+    return {"task_id": task.id}
+
+@app.get("/status/{task_id}")
+def check_status(task_id: str):
+    task_result = AsyncResult(task_id, app=celery_app)
+    response = {
+        "task_id": task_id,
+        "status": task_result.status,
+    }
+    if task_result.status == "SUCCESS":
+        response["result"] = task_result.result
+    elif task_result.status == "FAILURE":
+        response["error"] = str(task_result.result)
+    return response
+
+@app.get("/progress/{task_id}")
+def get_progress_status(task_id: str):
+    return get_progress(task_id)

@@ -1,0 +1,2 @@
+from .parser_tasks import parse_resumes_task
+from .standardizer_tasks import standardize_resumes_task
