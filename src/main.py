@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
-from src.Llama_parser.llama_resume_parser import ResumeParser
-from src.Standardizer.standardizer import ResumeStandardizer
+from src.llama_parser.llama_resume_parser import ResumeParser
+from src.standardizer.standardizer import ResumeStandardizer
 
 app = FastAPI()
 
