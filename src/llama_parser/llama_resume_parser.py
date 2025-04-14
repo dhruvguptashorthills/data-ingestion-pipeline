@@ -41,9 +41,7 @@ class ResumeParser:
  
     def parse_resume(self, file_path):
         try:
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            documents = loop.run_until_complete(self.parser.load_data(file_path))
+            documents = self.parser.load_data(file_path)
             combined_text = "\n".join([doc.text for doc in documents])
             parsed = {
                 "file": file_path.name,

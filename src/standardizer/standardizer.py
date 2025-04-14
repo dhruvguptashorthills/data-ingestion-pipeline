@@ -1,11 +1,11 @@
-# standardizer_oop.py
-
 import os
 import json
 from pathlib import Path
 from dotenv import load_dotenv
 import httpx
 import asyncio
+from src.utils.progress import update_progress
+from datetime import datetime
 
 class ResumeStandardizer:
     def __init__(self):
@@ -179,6 +179,46 @@ The quality of your standardization directly impacts downstream processing. Ensu
         for file in files:
             await self.standardize_resume(file)
 
+    async def run_with_progress(self, task_id: str):
+      files = list(self.INPUT_DIR.glob("*.json"))
+      total = len(files)
+      completed = 0
+      started_at = datetime.utcnow().isoformat()
+      file_statuses = []
+
+      for i, file in enumerate(files):
+          status = { "name": file.name, "status": "processing" }
+
+          update_progress(task_id, {
+              "task_id": task_id,
+              "status": "in_progress",
+              "phase": "standardizing",
+              "total": total,
+              "completed": completed,
+              "current_file": file.name,
+              "files": file_statuses + [status],
+              "started_at": started_at,
+          })
+
+          try:
+              await self.standardize_resume(file)
+              status["status"] = "done"
+              completed += 1
+          except Exception as e:
+              status["status"] = "error"
+              status["error"] = str(e)
+
+          file_statuses.append(status)
+
+      update_progress(task_id, {
+          "task_id": task_id,
+          "status": "done",
+          "phase": "standardizing",
+          "total": total,
+          "completed": completed,
+          "files": file_statuses,
+          "finished_at": datetime.utcnow().isoformat()
+      })
 
 if __name__ == "__main__":
     asyncio.run(ResumeStandardizer().run())
