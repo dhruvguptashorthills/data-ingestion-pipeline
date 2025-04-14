@@ -4,7 +4,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 from llama_parse import LlamaParse
 import fitz  # PyMuPDF
- 
+from datetime import datetime
+from src.utils.progress import update_progress
+import asyncio
 class ResumeParser:
     def __init__(self):
         load_dotenv()
@@ -39,7 +41,9 @@ class ResumeParser:
  
     def parse_resume(self, file_path):
         try:
-            documents = self.parser.load_data(file_path)
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            documents = loop.run_until_complete(self.parser.load_data(file_path))
             combined_text = "\n".join([doc.text for doc in documents])
             parsed = {
                 "file": file_path.name,
@@ -74,7 +78,52 @@ class ResumeParser:
                 self.save_to_json(parsed_data, output_path)
                 print(f"✅ Saved: {output_path.name}")
             print("-" * 40)
- 
- 
+
+    def run_with_progress(self, task_id: str):
+        self.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+        resume_files = [f for f in self.RESUME_DIR.iterdir() if f.suffix.lower() in self.SUPPORTED_EXTENSIONS]
+
+        total = len(resume_files)
+        parsed_count = 0
+        file_statuses = []
+        started_at = datetime.utcnow().isoformat()
+
+        for i, resume in enumerate(resume_files):
+            current_file = resume.name
+            current = {"name": current_file, "status": "processing"}
+
+            update_progress(task_id, {
+                "task_id": task_id,
+                "status": "in_progress",
+                "total": total,
+                "completed": parsed_count,
+                "current_file": current_file,
+                "files": file_statuses + [current],
+                "started_at": started_at,
+            })
+
+            output_path = self.OUTPUT_DIR / f"{resume.stem}.json"
+            if output_path.exists():
+                current["status"] = "skipped"
+            else:
+                parsed = self.parse_resume(resume)
+                if parsed:
+                    self.save_to_json(parsed, output_path)
+                    current["status"] = "done"
+                    parsed_count += 1
+                else:
+                    current["status"] = "error"
+
+            file_statuses.append(current)
+
+        update_progress(task_id, {
+            "task_id": task_id,
+            "status": "done",
+            "total": total,
+            "completed": parsed_count,
+            "files": file_statuses,
+            "finished_at": datetime.utcnow().isoformat()
+        })
+
 if __name__ == "__main__":
     ResumeParser().run()
