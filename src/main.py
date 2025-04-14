@@ -4,6 +4,7 @@ from celery.result import AsyncResult
 
 from src.celery_app import celery_app
 from src.tasks import parser_tasks, standardizer_tasks
+from src.utils.progress import get_progress
 app = FastAPI()
 
 @app.post("/parse")
@@ -28,3 +29,7 @@ def check_status(task_id: str):
     elif task_result.status == "FAILURE":
         response["error"] = str(task_result.result)
     return response
+
+@app.get("/progress/{task_id}")
+def get_progress_status(task_id: str):
+    return get_progress(task_id)
