@@ -1,0 +1,51 @@
+{
+  "name": "Mr. Akshay Chaudhary",
+  "email": "Akshaychaudhary1@live.com",
+  "phone": "8267000770",
+  "location": "H. NO. = 1223ch Gali No, 2 Dharampuri, Fafrana Road, Modinagar, Ghaziabad, U.P",
+  "summary": "To strive for excellence through continuous process of learning and performing as and contribute productively towards the value addiction of the organization and of self.",
+  "education": [
+    {
+      "degree": "B.A",
+      "institution": "M.M College, Modinagar",
+      "year": 2018
+    },
+    {
+      "degree": "12th",
+      "institution": "UP Board",
+      "year": 2013
+    },
+    {
+      "degree": "10th",
+      "institution": "C.B.S.E",
+      "year": 2011
+    }
+  ],
+  "experience": [
+    {
+      "title": "Sales Associate",
+      "company": "Reliance DXmini",
+      "duration": "10 months (2016-2017)",
+      "description": ""
+    },
+    {
+      "title": "Store Leader",
+      "company": "Jio Digital Store",
+      "duration": "1 year (2017-2018)",
+      "description": ""
+    }
+  ],
+  "skills": [
+    "Microsoft Office",
+    "Excel",
+    "SAP",
+    "Internet"
+  ],
+  "projects": [],
+  "certifications": [],
+  "languages": [
+    "English",
+    "Hindi"
+  ],
+  "social_profiles": []
+}

@@ -1,0 +1,84 @@
+{
+  "name": "Siddhant Dhigan",
+  "email": "ss.k.dhigan18@gmail.com",
+  "phone": "8826367479",
+  "location": "9 F-379 Budh Nagar, Inderpuri, New Delhi-110012",
+  "summary": "I am Siddhant Dhigan who aims to be able to find an exciting and challenging entry level position in industry alongside a company who will continuously motivate and drive me to do my best and improve on my skills and abilities in order to be able to assist the company in achieving its company mission and goals.",
+  "education": [
+    {
+      "degree": "BA (Hons.) Business Economics",
+      "institution": "Aryabhatta College, Delhi University",
+      "year": "2017 - 2020"
+    },
+    {
+      "degree": "CBSE (Class 12)",
+      "institution": "D.T.E.A Sr. Sec. School",
+      "year": "2016 - 2017"
+    },
+    {
+      "degree": "CBSE (Class 10)",
+      "institution": "Tagore Sr. Sec. School, Mayapuri, New Delhi",
+      "year": "2014 - 2015"
+    }
+  ],
+  "experience": [
+    {
+      "title": "Junior Research Associate",
+      "company": "ShortHills Tech Pvt Ltd.",
+      "duration": "2020-Present",
+      "description": ""
+    },
+    {
+      "title": "Data Analytics Intern",
+      "company": "KPMG",
+      "duration": "2020",
+      "description": "Working on Industry data & finding errors. Analysing the data with different tools."
+    },
+    {
+      "title": "Human Resource Intern",
+      "company": "LEAZ EDUCTECH",
+      "duration": "2019-2020",
+      "description": "6 months experience as a HR Executive. Working knowledge of Documentation, Conducting various rounds, Data Follow ups, lead generation."
+    },
+    {
+      "title": "Business Development Intern",
+      "company": "Quickride",
+      "duration": "",
+      "description": "Working towards Marketing Strategy. Increase the no. of App Installation & Supply Chain."
+    },
+    {
+      "title": "Intern",
+      "company": "Delhi Secretariat - PGMS Department",
+      "duration": "",
+      "description": ""
+    }
+  ],
+  "skills": [
+    "Attentive Listening and Effective Oral Communication Skills",
+    "Great at Problem Solving",
+    "Ability to Quickly Create and Apply Ideas and Solutions",
+    "Good Leadership Skills",
+    "Microsoft office",
+    "SPSS",
+    "R Programming (Basic)",
+    "Pursuing Business Intelligence Analytics Course",
+    "Working Knowledge of analytical tools in Excel"
+  ],
+  "projects": [
+    {
+      "title": "Research (Fitness, Meditation & Yoga)",
+      "description": "Primary Research (September, 2018 - November, 2018)"
+    },
+    {
+      "title": "Organizer - Roister (event)",
+      "description": "Aryabhatta college"
+    },
+    {
+      "title": "Team coordinator - Wedding and party event",
+      "description": "Signature by Dita (Event Company)"
+    }
+  ],
+  "certifications": [],
+  "languages": [],
+  "social_profiles": []
+}

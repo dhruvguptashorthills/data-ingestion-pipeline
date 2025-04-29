@@ -2,7 +2,7 @@ import json
 import uuid
 from pathlib import Path
 from pymongo import MongoClient
-from .config import MONGO_URI, DB_NAME, COLLECTION_NAME
+from config import MONGO_URI, DB_NAME, COLLECTION_NAME
 
 class ResumeDBManager:
     def __init__(self):
@@ -19,10 +19,10 @@ class ResumeDBManager:
         return result.inserted_id
 
     def bulk_insert(self, folder_path: str):
-        """Insert all JSON files in a folder with UUIDs."""
+        """Upsert all JSON files in a folder with UUIDs."""
         folder = Path(folder_path)
         files = list(folder.glob("*.json"))
-        print(f"📂 Found {len(files)} resumes to insert.\n")
+        print(f"📂 Found {len(files)} resumes to insert or update.\n")
 
         inserted, failed = 0, 0
 
@@ -32,14 +32,14 @@ class ResumeDBManager:
                     doc = json.load(f)
                 if "_id" not in doc:
                     doc["_id"] = str(uuid.uuid4())
-                self.collection.insert_one(doc)
-                print(f"✅ Inserted: {doc.get('name', 'Unknown')} ({file.name})")
+                self.collection.replace_one({"_id": doc["_id"]}, doc, upsert=True)
+                print(f"✅ Upserted: {doc.get('name', 'Unknown')} ({file.name})")
                 inserted += 1
             except Exception as e:
-                print(f"❌ Failed to insert {file.name}: {e}")
+                print(f"❌ Failed to upsert {file.name}: {e}")
                 failed += 1
 
-        print(f"\n📊 Summary: Total = {len(files)}, Inserted = {inserted}, Failed = {failed}")
+        print(f"\n📊 Summary: Total = {len(files)}, Upserted = {inserted}, Failed = {failed}")
 
     def find(self, query: dict):
         """Find resumes matching a query."""
@@ -73,6 +73,14 @@ class ResumeDBManager:
             print(f"🗑️ Deleted resume with ID {_id}")
         else:
             print(f"⚠️ No resume found with ID {_id}")
+    def delete_all_resumes(self):
+        """Delete all resumes in the collection."""
+        confirm = input("⚠️ Are you sure you want to delete ALL resumes? Type 'yes' to confirm: ")
+        if confirm.lower() == 'yes':
+            result = self.collection.delete_many({})
+            print(f"🗑️ Deleted {result.deleted_count} resumes.")
+        else:
+            print("❌ Delete cancelled.")
 
 if __name__ == "__main__":
     import argparse
@@ -83,6 +91,7 @@ if __name__ == "__main__":
     parser.add_argument("--find", help="Find query in JSON format")
     parser.add_argument("--update", help="JSON string with _id and fields to update")
     parser.add_argument("--delete", help="JSON string with _id of resume to delete")
+    parser.add_argument("--delete-all", action="store_true", help="Delete all resumes in the collection")
 
     args = parser.parse_args()
     db = ResumeDBManager()
@@ -115,6 +124,8 @@ if __name__ == "__main__":
             db.delete_resume(delete_data)
         except Exception as e:
             print(f"❌ Invalid JSON for --delete: {e}")
+    elif args.delete_all:
+        db.delete_all_resumes()
 
     else:
         print("⚠️ Please provide one of --file, --folder, --find, --update, or --delete.")

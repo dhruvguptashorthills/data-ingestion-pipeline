@@ -15,4 +15,3 @@
 
 --- 
 
-That’s it — clean, minimal, and dev-friendly.
