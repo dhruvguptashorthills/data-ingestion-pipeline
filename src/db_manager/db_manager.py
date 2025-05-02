@@ -32,7 +32,7 @@ class ResumeDBManager:
                     doc = json.load(f)
                 if "_id" not in doc:
                     doc["_id"] = str(uuid.uuid4())
-                self.collection.replace_one({"_id": doc["_id"]}, doc, upsert=True)
+                self.collection.replace_one({"name": doc["name"]}, doc, upsert=True)
                 print(f"✅ Upserted: {doc.get('name', 'Unknown')} ({file.name})")
                 inserted += 1
             except Exception as e:
